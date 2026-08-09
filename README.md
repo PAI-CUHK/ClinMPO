@@ -8,7 +8,7 @@
   Evidence-guided reward optimization for psychiatric reasoning in small language models
 </p>
 
-> **Repository scope:** This release contains the public prompt resources, three environment-configurable training entry scripts, and the VERL source tree used by the policy-optimization entry points, including the ClinMPO reward function. It does not include study datasets, model weights, checkpoints, or a complete runtime environment.
+> **Repository scope:** This release contains the public prompt resources, three environment-configurable training entry scripts, and the [VERL](https://github.com/volcengine/verl) source tree used by the policy-optimization entry points, including the ClinMPO reward function. It does not include study datasets, model weights, checkpoints, or a complete runtime environment.
 
 ## Overview
 
@@ -56,35 +56,6 @@ The study reports 8,849 retained questions, including 7,112 questions used for p
 
 The Evidence QA Dataset was constructed from psychiatry literature identified through OpenAlex and Europe PMC. The paper reports 18,569 question-answer pairs derived from 4,474 psychiatry publications and evaluated under CPTS criteria. The documented evidence-based multiple-choice question generation prompt is included; generated Evidence QA records are not redistributed.
 
-## Repository structure
-
-```text
-.
-├── assets/
-│   ├── figure1.svg
-│   ├── figure5.svg
-│   └── logo.svg
-├── prompts/
-│   ├── categorization.md
-│   ├── evidence_qa_generation.md
-│   ├── psychiatry_relevance_filter.md
-│   └── test_set_evaluation.md
-├── train/
-│   ├── train_clinmpo.sh
-│   ├── train_grpo.sh
-│   └── train_sft.sh
-├── verl/
-│   ├── docs/
-│   ├── examples/
-│   ├── tests/
-│   └── verl/utils/reward_score/clinm.py
-├── .gitignore
-├── LICENSE
-└── README.md
-```
-
-The `verl/` directory contains the VERL framework source used by the reinforcement-learning scripts. Only the ClinMPO-specific reward module is highlighted above; the directory also retains the framework files required by VERL.
-
 ## Prompt usage
 
 The `prompts/` directory contains the English templates used for the following tasks:
@@ -111,15 +82,15 @@ No data-generation API client, study source dataset, generated study record, or 
 
 The `train/` directory contains reference entry points for the three study conditions:
 
-- `train_sft.sh`: LoRA-based cold-start supervised fine-tuning with LLaMA-Factory.
-- `train_grpo.sh`: standard GRPO with VERL.
+- `train_sft.sh`: LoRA-based cold-start supervised fine-tuning with [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory).
+- `train_grpo.sh`: standard GRPO with [VERL](https://github.com/volcengine/verl).
 - `train_clinmpo.sh`: GRPO with the included ClinMPO reward function.
 
 Machine-specific paths, GPU assignments, dataset locations, output locations, and the custom reward path are supplied through environment variables. The scripts do not contain credentials, datasets, or local infrastructure paths.
 
-The defaults intentionally limit update magnitude: SFT uses a `1e-5` learning rate and the policy-optimization scripts use `1e-7`, one PPO epoch, a `0.1` PPO clipping range, a `0.5` gradient-norm cap, KL regularization, and GRPO group-advantage normalization. These are conservative starting points rather than universally optimal settings. Batch sizes, precision, parallelism, offloading, sequence lengths, learning rates, clipping values, and KL coefficients must be validated and adjusted for the actual model, dataset, GPU topology, and software environment.
+The scripts use conservative reference settings intended to limit update magnitude, with gradient control, policy clipping, KL regularization, and GRPO group-advantage normalization where applicable. These defaults are starting points rather than universally optimal settings. Batch sizes, precision, parallelism, offloading, sequence lengths, optimization settings, clipping behavior, and regularization must be validated and adjusted for the actual model, dataset, GPU topology, and software environment.
 
-Install the framework required by the selected entry point before running it: LLaMA-Factory for SFT and the dependencies documented in [`verl/docs/start/install.rst`](verl/docs/start/install.rst) for GRPO or ClinMPO. Required values can then be supplied without editing the scripts. For example:
+Install the framework required by the selected entry point before running it: [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) for SFT and [VERL](https://github.com/volcengine/verl) for GRPO or ClinMPO. The bundled VERL installation guidance is available in [`verl/docs/start/install.rst`](verl/docs/start/install.rst). Required values can then be supplied without editing the scripts. For example:
 
 ```bash
 BASE_MODEL_PATH=/path/to/model \
@@ -170,19 +141,6 @@ The external datasets used for downstream task evaluation are publicly available
 The manuscript reports dataset-level BERTScore recall, ROUGE-1, ROUGE-L, and ROUGE-Lsum for both evaluated models in Table 2. The identifiers for the sampled HealthCareMagic examples, evaluation sample identifiers, and metric source data accompany the paper and remain subject to the original dataset licenses. These evaluation datasets and records are not included in this code repository.
 
 The included source and scripts are reference materials, not a complete reproduction environment. ClinRM and ClinMPO model artifacts are not currently available through this repository.
-
-## Citation
-
-The manuscript is under review. Until a final bibliographic record is available, cite the manuscript version accompanying this repository:
-
-```bibtex
-@article{lin2026clinmpo,
-  title   = {Evidence-guided reinforcement learning improves psychiatric reasoning in small language models},
-  author  = {Lin, Xinxin and Dai, Guangxin and Zhong, Yi and Li, Xiang and others},
-  year    = {2026},
-  note    = {Manuscript under review}
-}
-```
 
 ## Medical disclaimer
 
