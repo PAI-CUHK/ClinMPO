@@ -2,13 +2,9 @@
   <img src="assets/logo.svg" alt="ClinMPO logo" width="520">
 </p>
 
-<h1 align="center">ClinMPO</h1>
-
 <p align="center">
   Evidence-guided reward optimization for psychiatric reasoning in small language models
 </p>
-
-> **Repository scope:** This release contains the public prompt resources, three environment-configurable training entry scripts, and the [VERL](https://github.com/volcengine/verl) source tree used by the policy-optimization entry points, including the ClinMPO reward function. It does not include study datasets, model weights, checkpoints, or a complete runtime environment.
 
 ## Overview
 
